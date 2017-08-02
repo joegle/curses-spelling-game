@@ -8,7 +8,7 @@ A simple CLI game to teach spelling
   + Maybe have fun learning ncurses
 
 * Todo
-  + [ ] Base CLI program
+  + [X] Base CLI program
   + [ ] Home directory settings
   + [ ] Add word command
   + [ ] Basic Game loop
