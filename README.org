@@ -1,0 +1,17 @@
+#+TITLE: Simple Spelling Game
+
+A simple CLI game to teach spelling
+
+* Goals
+  + Quickly get practicing spelling words to build confidence
+  + Practice spaced repition schedules
+  + Maybe have fun learning ncurses
+
+* Todo
+  + [ ] Base CLI program
+  + [ ] Home directory settings
+  + [ ] Add word command
+  + [ ] Basic Game loop
+  + [ ] Control-C trap
+  + n-back?
+
