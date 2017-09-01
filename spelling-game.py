@@ -1,27 +1,36 @@
 #!/usr/bin/env python2
 
 import argparse
+import sys
+import signal
 
 class game():
     def __init__(self, args):
         print "init"
         self.wordlist = self.load()
+        signal.signal(signal.SIGINT, self.on_quit)
         
     def start(self):
         print "started"
+
+            
         for word in self.wordlist:
             prompt = "\n$ %s\n> " % (word)
+            
             answer = raw_input(prompt)
 
             if answer == word:
                 print "CORRECT!"
+                    
 
     def load(self):
         f = open('word-list.txt','r')
         r1 = map(str.rstrip, f.readlines())
         return map(lambda x:x.lower(), r1)
 
-
+    def on_quit(self, signal, frame):
+        print "Good bye"
+        sys.exit(0)
         
 guide = """# Examples
 - examples 

@@ -12,6 +12,6 @@ A simple CLI game to teach spelling
   + [ ] Home directory settings
   + [ ] Add word command
   + [X] Basic Game loop
-  + [ ] Control-C trap
+  + [X] Control-C trap
   + n-back?
 
