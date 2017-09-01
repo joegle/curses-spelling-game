@@ -5,11 +5,24 @@ import argparse
 class game():
     def __init__(self, args):
         print "init"
-
+        self.wordlist = self.load()
+        
     def start(self):
         print "started"
+        for word in self.wordlist:
+            prompt = "\n$ %s\n> " % (word)
+            answer = raw_input(prompt)
+
+            if answer == word:
+                print "CORRECT!"
+
+    def load(self):
+        f = open('word-list.txt','r')
+        r1 = map(str.rstrip, f.readlines())
+        return map(lambda x:x.lower(), r1)
 
 
+        
 guide = """# Examples
 - examples 
 - here
