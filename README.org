@@ -9,8 +9,11 @@ A simple CLI game to teach spelling
 
 * Todo
   + [X] Base CLI program
-  + [ ] Home directory settings
-  + [ ] Add word command
+  + [X] Home directory settings
+  + [X] Add word command
+  + [ ] remove word command
+  + [ ] add score based on attempts and typing time
+  + [ ] add scheduler
   + [X] Basic Game loop
   + [X] Control-C trap
   + n-back?
