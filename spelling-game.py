@@ -4,6 +4,7 @@ import argparse
 import sys
 import signal
 import os
+import timeit
 
 class game():
     def __init__(self, parsed_args):
@@ -31,14 +32,28 @@ class game():
                 print "removing word"
                 sys.exit(0)
 
-        for word in self.wordlist:
-            prompt = "\n$ %s\n> " % (word)
+        else:
+            for word in self.wordlist:
+                self.challenge_word(word)
 
+    def challenge_word(self, word):
+        """runs a typing challenge loop and returns (attemps, seconds_elapsed)"""
+        prompt = "\n$ %s\n> " % (word)
+        start_time = timeit.default_timer()
+        started = True
+        attempts = 0
+        correct = False
+
+        while started or not correct:
+            started = False
             answer = raw_input(prompt)
+            attempts += 1
 
             if answer == word:
-                print "CORRECT!"
-
+                correct = True
+                elapsed = timeit.default_timer() - start_time
+                print "CORRECT! %s %s" % (attempts, elapsed)
+                return (attempts, elapsed)
 
     def add_word(self, word):
         file_name = self.args.config + '/word-list.txt'

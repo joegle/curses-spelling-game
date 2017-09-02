@@ -12,7 +12,8 @@ A simple CLI game to teach spelling
   + [X] Home directory settings
   + [X] Add word command
   + [ ] remove word command
-  + [ ] add score based on attempts and typing time
+  + [X] add score based on attempts and typing time
+  + [ ] record score
   + [ ] add scheduler
   + [X] Basic Game loop
   + [X] Control-C trap
