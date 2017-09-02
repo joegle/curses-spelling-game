@@ -12,6 +12,7 @@ class game():
         print "init"
         self.args = parsed_args
         self.wordlist_file = "word-list.txt"
+        self.schedules = {}
         self.wordlist = self.load()
 
         signal.signal(signal.SIGINT, self.on_quit)
@@ -80,6 +81,9 @@ class game():
         if not os.path.isdir(self.args.config):
             os.mkdir(self.args.config)
 
+
+        self.load_scores()
+
         file_name = self.args.config + '/word-list.txt'
 
         try:
@@ -89,6 +93,23 @@ class game():
 
         r1 = map(str.rstrip, f.readlines())
         return map(lambda x:x.lower(), r1)
+
+    def load_scores(self):
+        """Load scores from file and map into dictionary of words with challenge records"""
+        file_name = self.args.config + '/score.txt'
+        score_file = open(file_name, 'r')
+
+        for entry in score_file:
+            tokens = entry.split()
+            word = tokens[1]
+            point = (int(tokens[0]), int(tokens[2]), float(tokens[3]))
+
+            if word in self.schedules:
+                self.schedules[word].append(point)
+            else:
+                self.schedules[word] = [point]
+
+        score_file.close()
 
     def on_quit(self, signal, frame):
         print "Good bye"
