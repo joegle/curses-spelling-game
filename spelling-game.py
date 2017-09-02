@@ -5,6 +5,7 @@ import sys
 import signal
 import os
 import timeit
+import time
 
 class game():
     def __init__(self, parsed_args):
@@ -34,10 +35,13 @@ class game():
 
         else:
             for word in self.wordlist:
-                self.challenge_word(word)
+                score = self.challenge_word(word)
+                self.record_score(score)
 
     def challenge_word(self, word):
-        """runs a typing challenge loop and returns (attemps, seconds_elapsed)"""
+        """runs a typing challenge loop 
+            and returns (word, attempts, seconds_elapsed)
+        """
         prompt = "\n$ %s\n> " % (word)
         start_time = timeit.default_timer()
         started = True
@@ -53,7 +57,15 @@ class game():
                 correct = True
                 elapsed = timeit.default_timer() - start_time
                 print "CORRECT! %s %s" % (attempts, elapsed)
-                return (attempts, elapsed)
+                return {"word": word, "attempts": attempts, "time": elapsed}
+
+    def record_score(self, score):
+        file_name = self.args.config + '/score.txt'
+        score_file = open(file_name,'a+')
+        epoch_time = int(time.time())
+        entry = "%s %s %s %s\n" % ( epoch_time, score['word'], score['attempts'], score['time'])
+        score_file.write(entry)
+        score_file.close()
 
     def add_word(self, word):
         file_name = self.args.config + '/word-list.txt'

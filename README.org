@@ -13,7 +13,7 @@ A simple CLI game to teach spelling
   + [X] Add word command
   + [ ] remove word command
   + [X] add score based on attempts and typing time
-  + [ ] record score
+  + [X] record score
   + [ ] add scheduler
   + [X] Basic Game loop
   + [X] Control-C trap
