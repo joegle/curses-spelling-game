@@ -11,11 +11,34 @@ class game():
     def __init__(self, parsed_args):
         print "init"
         self.args = parsed_args
-        self.wordlist_file = "word-list.txt"
+        self.wordlist_file = "/word-list.txt"
+        self.score_file = "/score.txt"
         self.schedules = {}
-        self.wordlist = self.load()
+        self.wordlist = []
+        self.setup()
+        self.load_scores()
+        self.load_words()
 
         signal.signal(signal.SIGINT, self.on_quit)
+
+    def setup(self):
+        """create the config folder and data files if needed"""
+
+        print "using config folder: %s" % (self.args.config)
+        if not os.path.isdir(self.args.config):
+            os.mkdir(self.args.config)
+
+        try:
+            f = open(self.args.config + self.wordlist_file,'r')
+        except IOError:
+            f = open(self.args.config + self.wordlist_file,'a+')
+        f.close()
+
+        try:
+            f = open(self.args.config + self.score_file,'r')
+        except IOError:
+            f = open(self.args.config + self.score_file,'a+')
+        f.close()
 
     def start(self):
         print "started"
@@ -35,6 +58,8 @@ class game():
                 sys.exit(0)
 
         else:
+            print "Starting game"
+            print self.wordlist
             for word in self.wordlist:
                 score = self.challenge_word(word)
                 self.record_score(score)
@@ -61,7 +86,7 @@ class game():
                 return {"word": word, "attempts": attempts, "time": elapsed}
 
     def record_score(self, score):
-        file_name = self.args.config + '/score.txt'
+        file_name = self.args.config + self.score_file
         score_file = open(file_name,'a+')
         epoch_time = int(time.time())
         entry = "%s %s %s %s\n" % ( epoch_time, score['word'], score['attempts'], score['time'])
@@ -69,36 +94,28 @@ class game():
         score_file.close()
 
     def add_word(self, word):
-        file_name = self.args.config + '/word-list.txt'
+        file_name = self.args.config + self.wordlist_file
         word_list = open(file_name,'a+')
         word_list.write(word + "\n")
         word_list.close()
 
-    def load(self):
-        print "loading config"
+    def load_words(self):
+        print "loading words"
 
-        print "using config folder: %s" % (self.args.config)
-        if not os.path.isdir(self.args.config):
-            os.mkdir(self.args.config)
+        file_name = self.args.config + self.wordlist_file
 
-
-        self.load_scores()
-
-        file_name = self.args.config + '/word-list.txt'
-
-        try:
-            f = open(file_name, 'r')
-        except IOError:
-            f = open(file_name, 'w')
+        f = open(file_name, 'r')
 
         r1 = map(str.rstrip, f.readlines())
-        return map(lambda x:x.lower(), r1)
+        r2 = map(lambda x:x.lower(), r1)
+        print r2
+        self.wordlist = r2
 
     def load_scores(self):
         """Load scores from file and map into dictionary of words with challenge records"""
-        file_name = self.args.config + '/score.txt'
-        score_file = open(file_name, 'r')
-
+        file_name = self.args.config + self.score_file
+        score_file = open(file_name, 'a+')
+        print score_file, self.score_file
         for entry in score_file:
             tokens = entry.split()
             word = tokens[1]

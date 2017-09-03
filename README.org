@@ -14,8 +14,13 @@ A simple CLI game to teach spelling
   + [ ] remove word command
   + [X] add score based on attempts and typing time
   + [X] record score
-  + [ ] add scheduler
+  + [ ] add basic scheduler
+  + [ ] introduce curses display
+  + [ ] use curses to implement n-back
+  + [ ] add time delay punishment on error
+  + [ ] flash screen red on error and start word over and flash correct word
+    + system beep
+  + [ ] eliminate having to press enter
   + [X] Basic Game loop
   + [X] Control-C trap
-  + n-back?
 
