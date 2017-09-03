@@ -24,3 +24,11 @@ A simple CLI game to teach spelling
   + [X] Basic Game loop
   + [X] Control-C trap
 
+
+* Notes
+
+** Spaced repitition
+   + Wikipedia
+     : "Spaced repetition is a learning technique that incorporates increasing intervals of time between subsequent review of previously learned material in order to exploit the psychological spacing effect. Alternative names include spaced rehearsal, expanding rehearsal, graduated intervals, repetition spacing, repetition scheduling, spaced retrieval and expanded retrieval."
+   + [[https://cogsci.stackexchange.com/questions/5199/which-equation-is-ebbinghauss-forgetting-curve-and-what-do-the-constants-repres][Meaning of variables in forgetting formula]] - StackOverflow
+
