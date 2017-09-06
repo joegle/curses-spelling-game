@@ -6,10 +6,14 @@ import signal
 import os
 import timeit
 import time
+import curses
 
 class game():
-    def __init__(self, parsed_args):
+    def __init__(self, parsed_args, screen):
+        screen.clear()
         print "init"
+        self.screen = screen
+        self.setup_screen()
         self.args = parsed_args
         self.wordlist_file = "/word-list.txt"
         self.score_file = "/score.txt"
@@ -21,6 +25,12 @@ class game():
 
         signal.signal(signal.SIGINT, self.on_quit)
 
+    def setup_screen(self):
+        screen_y, screen_x = self.screen.getmaxyx()
+        win = curses.newwin(screen_y, screen_x, 0, 0)
+        self.screen.addstr(0, 0, "Current mode: Typing mode", curses.A_BOLD)
+        self.screen.refresh()
+        
     def setup(self):
         """create the config folder and data files if needed"""
 
@@ -153,10 +163,13 @@ parser.add_argument('command', type=str, nargs='*', help="'add' or 'rm'")
 args = parser.parse_args()
 
 
-def main():
-    session = game(args)
+stdscr = curses.initscr()
+
+
+def main(stdscr):
+    session = game(args, stdscr)
     session.start()
 
 if __name__ == "__main__":
-    main()
+    curses.wrapper(main)
 
