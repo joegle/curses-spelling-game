@@ -7,11 +7,12 @@ import os
 import timeit
 import time
 import curses
+import logging
 
 class game():
     def __init__(self, parsed_args, screen):
         screen.clear()
-        print "init"
+        logging.info("init")
         self.screen = screen
         self.setup_screen()
         self.args = parsed_args
@@ -34,7 +35,7 @@ class game():
     def setup(self):
         """create the config folder and data files if needed"""
 
-        print "using config folder: %s" % (self.args.config)
+        logging.info("using config folder: %s" % (self.args.config))
         if not os.path.isdir(self.args.config):
             os.mkdir(self.args.config)
 
@@ -51,25 +52,25 @@ class game():
         f.close()
 
     def start(self):
-        print "started"
+        logging.info("started")
 
-        print self.args.command
+        logging.info(self.args.command)
         if self.args.command:
             command = self.args.command
 
             if command[0] == "add":
-                print "adding word"
+                logging.info("adding word")
 
                 self.add_word(command[1])
                 sys.exit(0)
 
             if command[0] == "rm":
-                print "removing word"
+                logging.info("removing word")
                 sys.exit(0)
 
         else:
-            print "Starting game"
-            print self.wordlist
+            logging.info("Starting game")
+            logging.info(self.wordlist)
             for word in self.wordlist:
                 score = self.challenge_word(word)
                 self.record_score(score)
@@ -92,7 +93,7 @@ class game():
             if answer == word:
                 correct = True
                 elapsed = timeit.default_timer() - start_time
-                print "CORRECT! %s %s" % (attempts, elapsed)
+                logging.info("CORRECT! %s %s" % (attempts, elapsed))
                 return {"word": word, "attempts": attempts, "time": elapsed}
 
     def record_score(self, score):
@@ -110,7 +111,7 @@ class game():
         word_list.close()
 
     def load_words(self):
-        print "loading words"
+        logging.info("loading words")
 
         file_name = self.args.config + self.wordlist_file
 
@@ -118,14 +119,14 @@ class game():
 
         r1 = map(str.rstrip, f.readlines())
         r2 = map(lambda x:x.lower(), r1)
-        print r2
+        logging.info(r2)
         self.wordlist = r2
 
     def load_scores(self):
         """Load scores from file and map into dictionary of words with challenge records"""
         file_name = self.args.config + self.score_file
         score_file = open(file_name, 'a+')
-        print score_file, self.score_file
+        
         for entry in score_file:
             tokens = entry.split()
             word = tokens[1]
@@ -139,7 +140,7 @@ class game():
         score_file.close()
 
     def on_quit(self, signal, frame):
-        print "Good bye"
+        logging.info("Good bye")
         sys.exit(0)
 
 guide = """# Examples
@@ -164,6 +165,10 @@ args = parser.parse_args()
 
 
 stdscr = curses.initscr()
+
+logging.basicConfig(format='%(levelname)s: %(message)s',
+                    filename='session.log',
+                    level=logging.DEBUG)
 
 
 def main(stdscr):
