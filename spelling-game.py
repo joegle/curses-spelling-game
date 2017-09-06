@@ -26,11 +26,22 @@ class game():
 
         signal.signal(signal.SIGINT, self.on_quit)
 
+    def echo_bar(self, text):
+        self.screen.addstr(0, 0, "echo: " + text, curses.A_BOLD)
+        self.screen.refresh()
+
+    def prompt(self, text):
+        self.screen.addstr(5, 5, "prompt: " + text, curses.A_BOLD)
+        self.screen.refresh()
+
+    def status(self, text):
+        self.screen.addstr(10, 6, "status: " + str(text), curses.A_BOLD)
+        self.screen.refresh()
+        
     def setup_screen(self):
         screen_y, screen_x = self.screen.getmaxyx()
         win = curses.newwin(screen_y, screen_x, 0, 0)
-        self.screen.addstr(0, 0, "Current mode: Typing mode", curses.A_BOLD)
-        self.screen.refresh()
+        self.echo_bar("Init")
         
     def setup(self):
         """create the config folder and data files if needed"""
@@ -84,17 +95,34 @@ class game():
         started = True
         attempts = 0
         correct = False
+        char_index = 0
+        answer = ""
 
         while started or not correct:
             started = False
-            answer = raw_input(prompt)
-            attempts += 1
+            self.prompt(word)
+            c = self.screen.getch()
+            answer = answer + chr(c)
+            
+            self.echo_bar(answer)
 
-            if answer == word:
-                correct = True
-                elapsed = timeit.default_timer() - start_time
-                logging.info("CORRECT! %s %s" % (attempts, elapsed))
-                return {"word": word, "attempts": attempts, "time": elapsed}
+            attempts += 1
+            
+            if chr(c) == word[char_index]:
+
+                char_index += 1
+                if char_index == len(word):
+                    correct = True
+                    elapsed = timeit.default_timer() - start_time
+                    #self.echo_bar("CORRECT! %s %s" % (attempts, elapsed))
+                    return {"word": word, "attempts": attempts, "time": elapsed}
+            else:
+                correct = False
+                char_index = 0
+                answer = ""
+                curses.beep()
+                self.echo_bar("                   ")
+                #self.echo_bar("ERR!")
 
     def record_score(self, score):
         file_name = self.args.config + self.score_file
