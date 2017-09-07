@@ -1,4 +1,5 @@
 #!/usr/bin/env python2
+# Copyright 2017 Joseph Wright <joe@joegle.com>
 
 import argparse
 import sys
