@@ -8,6 +8,7 @@ import os
 import timeit
 import time
 import curses
+from curses import panel
 import logging
 
 class game():
@@ -15,7 +16,10 @@ class game():
         screen.clear()
         logging.info("init")
         self.screen = screen
+        self.win_panel = []
+        self.start_panel = []
         self.setup_screen()
+        self.logo_panel()
         self.args = parsed_args
         self.wordlist_file = "/word-list.txt"
         self.score_file = "/score.txt"
@@ -24,25 +28,54 @@ class game():
         self.setup()
         self.load_scores()
         self.load_words()
-
+        self.process_args()
+        self.menu()
         signal.signal(signal.SIGINT, self.on_quit)
 
-    def echo_bar(self, text):
-        self.screen.addstr(0, 0, "echo: " + text, curses.A_BOLD)
-        self.screen.refresh()
-
-    def prompt(self, text):
-        self.screen.addstr(5, 5, "prompt: " + text, curses.A_BOLD)
-        self.screen.refresh()
-
-    def status(self, text):
-        self.screen.addstr(10, 6, "status: " + str(text), curses.A_BOLD)
-        self.screen.refresh()
-        
     def setup_screen(self):
         screen_y, screen_x = self.screen.getmaxyx()
         win = curses.newwin(screen_y, screen_x, 0, 0)
+        curses.curs_set(0)
+        self.win_panel = panel.new_panel(win)
         self.echo_bar("Init")
+
+    def logo_panel(self):
+        """create curses panel for home screen and bring to front"""
+        screen_y, screen_x = self.screen.getmaxyx()
+        win = curses.newwin(screen_y, screen_x, 0, 0)
+
+        self.start_panel = panel.new_panel(win)
+        f = open("logo.txt", 'r').read()
+        self.start_panel.window().addstr(f)
+        logo_height = len(f.split("\n"))
+        start_msg = "Press any key to start"
+        self.start_panel.window().addstr(logo_height, 2, start_msg)
+        self.start_panel.top()
+        self.win_panel.bottom()
+
+        self.pflush()
+        
+    def pflush(self):
+        panel.update_panels()
+        curses.doupdate()
+
+    def echo_bar(self, text):
+        self.win_panel.window().move(0,0)
+        self.win_panel.window().clrtoeol()
+        self.win_panel.window().addstr(0, 0, "echo: " + text, curses.A_BOLD)
+
+    def prompt(self, text):
+        self.win_panel.window().move(5, 5)
+        self.win_panel.window().clrtoeol()
+        self.win_panel.window().addstr(5, 5, "prompt: " + text, curses.A_BOLD)
+
+    def menu(self):
+        """start screen display and start on key press"""
+        c = self.screen.getkey()
+        self.start_panel.bottom()
+        self.win_panel.top()
+        self.pflush()
+        self.start()
         
     def setup(self):
         """create the config folder and data files if needed"""
@@ -63,10 +96,8 @@ class game():
             f = open(self.args.config + self.score_file,'a+')
         f.close()
 
-    def start(self):
-        logging.info("started")
-
-        logging.info(self.args.command)
+    def process_args(self):
+        """switch to do one time commands and possibly exit""" 
         if self.args.command:
             command = self.args.command
 
@@ -79,14 +110,19 @@ class game():
             if command[0] == "rm":
                 logging.info("removing word")
                 sys.exit(0)
+        
+    def start(self):
+        self.process_args()
+        self.challenge_loop()
 
-        else:
-            logging.info("Starting game")
-            logging.info(self.wordlist)
-            for word in self.wordlist:
-                score = self.challenge_word(word)
-                self.record_score(score)
-
+    def challenge_loop(self):
+        """Main game loop"""
+        logging.info("Starting game")
+        logging.info(self.wordlist)
+        for word in self.wordlist:
+            score = self.challenge_word(word)
+            self.record_score(score)
+        
     def challenge_word(self, word):
         """runs a typing challenge loop 
             and returns (word, attempts, seconds_elapsed)
@@ -101,8 +137,9 @@ class game():
 
         while started or not correct:
             started = False
+            
             self.prompt(word)
-            c = self.screen.getch()
+            c = self.win_panel.window().getch()
             answer = answer + chr(c)
             
             self.echo_bar(answer)
@@ -115,6 +152,7 @@ class game():
                 if char_index == len(word):
                     correct = True
                     elapsed = timeit.default_timer() - start_time
+                    self.echo_bar("")
                     #self.echo_bar("CORRECT! %s %s" % (attempts, elapsed))
                     return {"word": word, "attempts": attempts, "time": elapsed}
             else:
@@ -122,8 +160,8 @@ class game():
                 char_index = 0
                 answer = ""
                 curses.beep()
-                self.echo_bar("                   ")
-                #self.echo_bar("ERR!")
+                #self.win_panel.window().refresh()
+                self.echo_bar("")
 
     def record_score(self, score):
         file_name = self.args.config + self.score_file
@@ -202,7 +240,6 @@ logging.basicConfig(format='%(levelname)s: %(message)s',
 
 def main(stdscr):
     session = game(args, stdscr)
-    session.start()
 
 if __name__ == "__main__":
     curses.wrapper(main)
