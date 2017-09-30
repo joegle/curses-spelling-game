@@ -14,7 +14,7 @@ class GameModel():
         self.wordlist = []
         self.schedules = {}
         self.setup_config_folder()
-        
+
     def __str__(self):
         return "game model"
 
@@ -38,4 +38,15 @@ class GameModel():
         except IOError:
             f = open(config_dir + self.score_file,'a+')
         f.close()
-    
+
+    def load_words(self):
+        logging.info("loading words")
+
+        file_name = self.config_folder + self.wordlist_file
+
+        f = open(file_name, 'r')
+
+        r1 = map(str.rstrip, f.readlines())
+        r2 = map(lambda x:x.lower(), r1)
+        logging.info("wordlist: " + str(r2))
+        self.wordlist = r2

@@ -30,7 +30,7 @@ class game():
         self.args = parsed_args
 
         self.load_scores()
-        self.load_words()
+        self.model.load_words()
         self.process_args()
         self.menu()
         signal.signal(signal.SIGINT, self.on_quit)
@@ -160,18 +160,6 @@ class game():
         word_list = open(file_name,'a+')
         word_list.write(word + "\n")
         word_list.close()
-
-    def load_words(self):
-        logging.info("loading words")
-
-        file_name = self.args.config + self.model.wordlist_file
-
-        f = open(file_name, 'r')
-
-        r1 = map(str.rstrip, f.readlines())
-        r2 = map(lambda x:x.lower(), r1)
-        logging.info(r2)
-        self.model.wordlist = r2
 
     def load_scores(self):
         """Load scores from file and map into dictionary of words with challenge records"""
