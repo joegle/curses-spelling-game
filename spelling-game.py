@@ -15,7 +15,7 @@ import engine
 class game():
     def __init__(self, parsed_args, screen):
         screen.clear()
-        logging.info("init")
+        logging.info("===== init ====")
 
         self.model = engine.GameModel()
         self.view = engine.GameView()
@@ -29,8 +29,6 @@ class game():
         self.args = parsed_args
         self.wordlist_file = "/word-list.txt"
         self.score_file = "/score.txt"
-        self.schedules = {}
-        self.wordlist = []
         self.setup()
         self.load_scores()
         self.load_words()
@@ -124,8 +122,8 @@ class game():
     def challenge_loop(self):
         """Main game loop"""
         logging.info("Starting game")
-        logging.info(self.wordlist)
-        for word in self.wordlist:
+        logging.info(self.model.wordlist)
+        for word in self.model.wordlist:
             score = self.challenge_word(word)
             self.record_score(score)
         
@@ -193,7 +191,7 @@ class game():
         r1 = map(str.rstrip, f.readlines())
         r2 = map(lambda x:x.lower(), r1)
         logging.info(r2)
-        self.wordlist = r2
+        self.model.wordlist = r2
 
     def load_scores(self):
         """Load scores from file and map into dictionary of words with challenge records"""
@@ -205,10 +203,10 @@ class game():
             word = tokens[1]
             point = (int(tokens[0]), int(tokens[2]), float(tokens[3]))
 
-            if word in self.schedules:
-                self.schedules[word].append(point)
+            if word in self.model.schedules:
+                self.model.schedules[word].append(point)
             else:
-                self.schedules[word] = [point]
+                self.model.schedules[word] = [point]
 
         score_file.close()
 
