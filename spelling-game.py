@@ -6,7 +6,6 @@ import sys
 import signal
 import os
 import timeit
-import time
 import curses
 from curses import panel
 import logging
@@ -105,7 +104,7 @@ class game():
         logging.info(self.model.wordlist)
         for word in self.model.wordlist:
             score = self.challenge_word(word)
-            self.record_score(score)
+            self.model.record_score(score)
         
     def challenge_word(self, word):
         """runs a typing challenge loop 
@@ -147,13 +146,6 @@ class game():
                 #self.win_panel.window().refresh()
                 self.echo_bar("")
 
-    def record_score(self, score):
-        file_name = self.args.config + self.model.score_file
-        score_file = open(file_name,'a+')
-        epoch_time = int(time.time())
-        entry = "%s %s %s %s\n" % ( epoch_time, score['word'], score['attempts'], score['time'])
-        score_file.write(entry)
-        score_file.close()
 
     def add_word(self, word):
         file_name = self.args.config + self.model.wordlist_file

@@ -1,6 +1,7 @@
 #!/usr/bin/env python2
 import os
 import logging
+import time
 
 class GameModel():
     """handles game session data and is an extention of the filesystem"""
@@ -68,3 +69,11 @@ class GameModel():
 
         score_file.close()
 
+    def record_score(self, score):
+        """write the score to disk"""
+        file_name = self.config_folder + self.score_file
+        score_file = open(file_name,'a+')
+        epoch_time = int(time.time())
+        entry = "%s %s %s %s\n" % ( epoch_time, score['word'], score['attempts'], score['time'])
+        score_file.write(entry)
+        score_file.close()
