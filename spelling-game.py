@@ -17,7 +17,8 @@ class game():
         screen.clear()
         logging.info("===== init ====")
 
-        self.model = engine.GameModel()
+
+        self.model = engine.GameModel(".spelling")
         self.view = engine.GameView()
         logging.info(self.view)
         
@@ -27,9 +28,7 @@ class game():
         self.setup_screen()
         self.logo_panel()
         self.args = parsed_args
-        self.wordlist_file = "/word-list.txt"
-        self.score_file = "/score.txt"
-        self.setup()
+
         self.load_scores()
         self.load_words()
         self.process_args()
@@ -81,25 +80,6 @@ class game():
         self.pflush()
         self.start()
         
-    def setup(self):
-        """create the config folder and data files if needed"""
-
-        logging.info("using config folder: %s" % (self.args.config))
-        if not os.path.isdir(self.args.config):
-            os.mkdir(self.args.config)
-
-        try:
-            f = open(self.args.config + self.wordlist_file,'r')
-        except IOError:
-            f = open(self.args.config + self.wordlist_file,'a+')
-        f.close()
-
-        try:
-            f = open(self.args.config + self.score_file,'r')
-        except IOError:
-            f = open(self.args.config + self.score_file,'a+')
-        f.close()
-
     def process_args(self):
         """switch to do one time commands and possibly exit""" 
         if self.args.command:
@@ -168,7 +148,7 @@ class game():
                 self.echo_bar("")
 
     def record_score(self, score):
-        file_name = self.args.config + self.score_file
+        file_name = self.args.config + self.model.score_file
         score_file = open(file_name,'a+')
         epoch_time = int(time.time())
         entry = "%s %s %s %s\n" % ( epoch_time, score['word'], score['attempts'], score['time'])
@@ -176,7 +156,7 @@ class game():
         score_file.close()
 
     def add_word(self, word):
-        file_name = self.args.config + self.wordlist_file
+        file_name = self.args.config + self.model.wordlist_file
         word_list = open(file_name,'a+')
         word_list.write(word + "\n")
         word_list.close()
@@ -184,7 +164,7 @@ class game():
     def load_words(self):
         logging.info("loading words")
 
-        file_name = self.args.config + self.wordlist_file
+        file_name = self.args.config + self.model.wordlist_file
 
         f = open(file_name, 'r')
 
@@ -195,7 +175,7 @@ class game():
 
     def load_scores(self):
         """Load scores from file and map into dictionary of words with challenge records"""
-        file_name = self.args.config + self.score_file
+        file_name = self.args.config + self.model.score_file
         score_file = open(file_name, 'a+')
         
         for entry in score_file:
