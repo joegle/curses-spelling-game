@@ -29,7 +29,7 @@ class game():
         self.logo_panel()
         self.args = parsed_args
 
-        self.load_scores()
+        self.model.load_scores()
         self.model.load_words()
         self.process_args()
         self.menu()
@@ -160,23 +160,6 @@ class game():
         word_list = open(file_name,'a+')
         word_list.write(word + "\n")
         word_list.close()
-
-    def load_scores(self):
-        """Load scores from file and map into dictionary of words with challenge records"""
-        file_name = self.args.config + self.model.score_file
-        score_file = open(file_name, 'a+')
-        
-        for entry in score_file:
-            tokens = entry.split()
-            word = tokens[1]
-            point = (int(tokens[0]), int(tokens[2]), float(tokens[3]))
-
-            if word in self.model.schedules:
-                self.model.schedules[word].append(point)
-            else:
-                self.model.schedules[word] = [point]
-
-        score_file.close()
 
     def on_quit(self, signal, frame):
         logging.info("Good bye")

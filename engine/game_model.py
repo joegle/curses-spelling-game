@@ -50,3 +50,21 @@ class GameModel():
         r2 = map(lambda x:x.lower(), r1)
         logging.info("wordlist: " + str(r2))
         self.wordlist = r2
+
+    def load_scores(self):
+        """Load scores from file and map into dictionary of words with challenge records"""
+        file_name = self.config_folder + self.score_file
+        score_file = open(file_name, 'a+')
+        
+        for entry in score_file:
+            tokens = entry.split()
+            word = tokens[1]
+            point = (int(tokens[0]), int(tokens[2]), float(tokens[3]))
+
+            if word in self.model.schedules:
+                self.schedules[word].append(point)
+            else:
+                self.schedules[word] = [point]
+
+        score_file.close()
+
