@@ -87,7 +87,7 @@ class game():
             if command[0] == "add":
                 logging.info("adding word")
 
-                self.add_word(command[1])
+                self.model.add_word(command[1])
                 sys.exit(0)
 
             if command[0] == "rm":
@@ -146,12 +146,6 @@ class game():
                 #self.win_panel.window().refresh()
                 self.echo_bar("")
 
-
-    def add_word(self, word):
-        file_name = self.args.config + self.model.wordlist_file
-        word_list = open(file_name,'a+')
-        word_list.write(word + "\n")
-        word_list.close()
 
     def on_quit(self, signal, frame):
         logging.info("Good bye")

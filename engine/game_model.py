@@ -77,3 +77,11 @@ class GameModel():
         entry = "%s %s %s %s\n" % ( epoch_time, score['word'], score['attempts'], score['time'])
         score_file.write(entry)
         score_file.close()
+
+    def add_word(self, word):
+        """add a new word to training set"""
+
+        file_name = self.config_folder + self.wordlist_file
+        word_list = open(file_name,'a+')
+        word_list.write(word + "\n")
+        word_list.close()
