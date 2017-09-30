@@ -10,11 +10,17 @@ import time
 import curses
 from curses import panel
 import logging
+import engine
 
 class game():
     def __init__(self, parsed_args, screen):
         screen.clear()
         logging.info("init")
+
+        self.model = engine.GameModel()
+        self.view = engine.GameView()
+        logging.info(self.view)
+        
         self.screen = screen
         self.win_panel = []
         self.start_panel = []
