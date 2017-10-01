@@ -18,8 +18,7 @@ class game():
 
 
         self.model = engine.GameModel(".spelling")
-        #self.view = engine.GameView()
-        #logging.info(self.view)
+        self.view = engine.GameView(screen)
         
         self.screen = screen
         self.win_panel = []
@@ -172,15 +171,14 @@ parser.add_argument('command', type=str, nargs='*', help="'add' or 'rm'")
 args = parser.parse_args()
 
 
-stdscr = curses.initscr()
 
 logging.basicConfig(format='%(levelname)s: %(message)s',
                     filename='session.log',
                     level=logging.DEBUG)
 
 
-def main(stdscr):
-    session = game(args, stdscr)
+def main(stdscr1):
+    session = game(args, stdscr1)
 
 if __name__ == "__main__":
     curses.wrapper(main)

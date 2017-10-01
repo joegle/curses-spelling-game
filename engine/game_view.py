@@ -6,18 +6,16 @@ import logging
 class GameView():
     """Handles the curses display"""
 
-    def __init__(self):
+    def __init__(self, screen):
         self.view = []
-        self.screen = []
+        self.screen = screen
         self.win_panel = []
-
-        curses.wrapper(self.setup_screen)
+        self.setup_screen(screen)
         
-    def setup_screen(self, scr):
+    def setup_screen(self, screen):
         logging.debug("Setting up screen")
+        self.screen = screen
 
-        self.screen = scr
-        
         curses.curs_set(0)
         screen_y, screen_x = self.screen.getmaxyx()
         win = curses.newwin(screen_y, screen_x, 0, 0)
@@ -36,3 +34,11 @@ class GameView():
     def __str__(self):
         return "game view"
     
+def main(stdscr):
+    print stdscr
+    view = GameView(stdscr)
+    view.run()
+
+if __name__ == "__main__":
+    curses.wrapper(main)
+
