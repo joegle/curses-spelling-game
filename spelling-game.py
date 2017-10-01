@@ -18,8 +18,8 @@ class game():
 
 
         self.model = engine.GameModel(".spelling")
-        self.view = engine.GameView()
-        logging.info(self.view)
+        #self.view = engine.GameView()
+        #logging.info(self.view)
         
         self.screen = screen
         self.win_panel = []
