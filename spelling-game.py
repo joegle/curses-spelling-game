@@ -96,6 +96,7 @@ class game():
                     
 
             if command[0] == "rm":
+                logging.warn("Removing word not implemented")
                 logging.info("removing word")
                 sys.exit(0)
 
