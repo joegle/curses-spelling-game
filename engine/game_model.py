@@ -83,7 +83,11 @@ class GameModel():
     def add_word(self, word):
         """add a new word to training set"""
 
+        if word in self.wordlist:
+            return "Already in word list"
+
         file_name = self.config_folder + self.wordlist_file
         word_list = open(file_name,'a+')
         word_list.write(word + "\n")
         word_list.close()
+        return None

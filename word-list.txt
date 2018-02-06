@@ -1,8 +1,1 @@
-Astronaut
-Serenity
-seperation
-techniques
-candidates
-cabinet
-withdrawal
-beneficiaries
+symlink from nvALT file

@@ -30,7 +30,7 @@ class game():
         self.model.load_scores()
         self.model.load_words()
         self.process_args()
-        self.menu()
+        self.show_menu()
         signal.signal(signal.SIGINT, self.on_quit)
 
     def setup_screen(self):
@@ -70,7 +70,7 @@ class game():
         self.win_panel.window().clrtoeol()
         self.win_panel.window().addstr(5, 5, "prompt: " + text, curses.A_BOLD)
 
-    def menu(self):
+    def show_menu(self):
         """start screen display and start on key press"""
         c = self.screen.getkey()
         self.start_panel.bottom()
@@ -81,17 +81,25 @@ class game():
     def process_args(self):
         """switch to do one time commands and possibly exit""" 
         if self.args.command:
+            curses.endwin()
             command = self.args.command
 
             if command[0] == "add":
-                logging.info("adding word")
-
-                self.model.add_word(command[1])
-                sys.exit(0)
+                logging.info("adding word " + command[1] )
+                                
+                added = self.model.add_word(command[1])
+                
+                if added != None: 
+                    print "already in word list"
+                    logging.warn("already " )
+                    sys.exit(1)
+                    
 
             if command[0] == "rm":
                 logging.info("removing word")
                 sys.exit(0)
+
+            sys.exit(1)
         
     def start(self):
         self.process_args()
