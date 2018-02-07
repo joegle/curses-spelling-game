@@ -131,6 +131,12 @@ class game():
             
             self.prompt(word)
             c = self.win_panel.window().getch()
+
+            # escape key
+            if c == 27:
+                sys.exit(0)
+                
+
             answer = answer + chr(c)
             
             self.echo_bar(answer)
