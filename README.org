@@ -34,6 +34,7 @@ A simple CLI game to teach spelling
   + [ ] Log to stdout and to log file
   + [ ] Implement n-back
   + [ ] add time delay punishment on error
+  + [ ] Randomly swap two letters
 
 * Notes
 
