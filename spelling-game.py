@@ -49,7 +49,7 @@ class game():
         f = open("logo.txt", 'r').read()
         self.start_panel.window().addstr(f)
         logo_height = len(f.split("\n"))
-        start_msg = "Press any key to start"
+        start_msg = "Press any key to start\n  Escape to quit"
         self.start_panel.window().addstr(logo_height, 2, start_msg)
         self.start_panel.top()
         self.win_panel.bottom()
@@ -100,6 +100,10 @@ class game():
                 logging.info("removing word")
                 sys.exit(0)
 
+            if command[0] == "stats":
+                self.model.stats()
+                sys.exit(0)
+
             sys.exit(1)
         
     def start(self):
@@ -121,7 +125,7 @@ class game():
         prompt = "\n$ %s\n> " % (word)
         start_time = timeit.default_timer()
         started = True
-        attempts = 0
+        attempts = 1
         correct = False
         char_index = 0
         answer = ""
@@ -141,10 +145,9 @@ class game():
             
             self.echo_bar(answer)
 
-            attempts += 1
             
             if chr(c) == word[char_index]:
-
+                
                 char_index += 1
                 if char_index == len(word):
                     correct = True
@@ -153,6 +156,7 @@ class game():
                     #self.echo_bar("CORRECT! %s %s" % (attempts, elapsed))
                     return {"word": word, "attempts": attempts, "time": elapsed}
             else:
+                attempts += 1
                 correct = False
                 char_index = 0
                 answer = ""

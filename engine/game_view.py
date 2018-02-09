@@ -31,6 +31,7 @@ class GameView():
         self.main_window.show()
         self.logo_panel()
         c = self.main_window.window().getch()
+        log.info(c)
         
     def __str__(self):
         return "game view"

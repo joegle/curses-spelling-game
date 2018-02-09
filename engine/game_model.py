@@ -57,20 +57,48 @@ class GameModel():
     def load_scores(self):
         """Load scores from file and map into dictionary of words with challenge records"""
         file_name = self.config_folder + self.score_file
+
         score_file = open(file_name, 'a+')
-        
-        for entry in score_file:
+
+        for entry in score_file.readlines():
             tokens = entry.split()
             word = tokens[1]
             point = (int(tokens[0]), int(tokens[2]), float(tokens[3]))
 
-            if word in self.model.schedules:
+            if word in self.schedules:
                 self.schedules[word].append(point)
             else:
                 self.schedules[word] = [point]
 
         score_file.close()
 
+    def load_scores2(self):
+
+        score_file_name = self.config_folder + self.score_file
+        
+        print "score2", score_file_name
+
+        f = open(score_file_name, "r")
+        
+        for entry in f.readlines():
+            tokens = entry.split()
+            word = tokens[1]
+            attempts = int(tokens[2])
+            b = len(word)
+            duration = float(tokens[3])
+            speed = attempts * b / duration
+            accuracy = attempts**(-1.0/b)
+            point = (int(tokens[0]), attempts, duration, speed, accuracy)
+            #print word, point
+            
+            if word in self.schedules:
+                self.schedules[word].append(point)
+            else:
+                self.schedules[word] = [point]
+
+        f.close()
+
+        
     def record_score(self, score):
         """write the score to disk"""
         file_name = self.config_folder + self.score_file
@@ -91,3 +119,22 @@ class GameModel():
         word_list.write(word + "\n")
         word_list.close()
         return None
+
+    def stats(self):
+        self.load_scores2()
+        k = self.schedules.keys()
+        print self.schedules[k[1]]
+
+        counter = 0
+        sum_speed = 0
+        sum_accuracy = 0
+        for x in k:
+            for point in self.schedules[x]:
+                sum_speed += point[3]
+                sum_accuracy += point[4]
+                counter += 1
+
+        print "avg speed", sum_speed/ counter
+        print "avg accuracy", sum_accuracy/ counter
+                
+        print "stats"

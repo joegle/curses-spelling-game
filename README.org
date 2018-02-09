@@ -10,6 +10,7 @@ A simple CLI game to teach spelling
 * Todo
   + [ ] Add basic scheduler
   + [ ] Hide target word when typing starts
+  + [ ] Start timer on first letter typed
   + [ ] Move curses window logic into class and clarify variable names
   + [ ] Adjust code for game mode flexibility
   + [X] Base CLI program
@@ -37,6 +38,14 @@ A simple CLI game to teach spelling
   + [ ] Randomly swap two letters
 
 * Notes
+** Metrics
+   + There are two metrics that describe spelling a word: speed and accuracy
+   + Speed (r) of spelling a word is letters/second
+   + Accuracy (k) is the expected number of attempts until success
+     + Success is defined as consecutively matching all letters exactly
+   + The game keeps score of attempts and time per word
+   + Expected Time (T) = A * len(word) / r
+   + Expected Attempts (A) = k ^ -len(word)
 
 ** Spaced repetition
    + Wikipedia
