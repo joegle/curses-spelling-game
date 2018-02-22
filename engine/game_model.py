@@ -4,6 +4,8 @@
 import os
 import logging
 import time
+import datetime
+import util
 
 class GameModel():
     """handles game session data and is an extention of the filesystem"""
@@ -79,17 +81,28 @@ class GameModel():
         print "score2", score_file_name
 
         f = open(score_file_name, "r")
+
+        self.usage = {}
         
         for entry in f.readlines():
             tokens = entry.split()
+            date = int(tokens[0])
             word = tokens[1]
             attempts = int(tokens[2])
             b = len(word)
             duration = float(tokens[3])
             speed = attempts * b / duration
             accuracy = attempts**(-1.0/b)
-            point = (int(tokens[0]), attempts, duration, speed, accuracy)
+            point = (date, attempts, duration, speed, accuracy)
             #print word, point
+
+            d = datetime.datetime.fromtimestamp(date).date()
+
+            if d in self.usage:
+                self.usage[d].append(date)
+            else:
+                self.usage[d] = [date]
+                
             
             if word in self.schedules:
                 self.schedules[word].append(point)
@@ -129,12 +142,25 @@ class GameModel():
         sum_speed = 0
         sum_accuracy = 0
         for x in k:
+
             for point in self.schedules[x]:
+                print point
                 sum_speed += point[3]
                 sum_accuracy += point[4]
                 counter += 1
 
         print "avg speed", sum_speed/ counter
         print "avg accuracy", sum_accuracy/ counter
-                
+
+        for x in self.usage.keys():
+            print "\n>>>>",x
+            dots = sorted(self.usage[x])
+            r = util.spans(dots)
+            sum1 = util.sum_pair(r)
+            sum2 = util.spans2(dots)
+            print ">",sum1, sum2
+            
+            if sum1 != sum2:
+                print dots
+            
         print "stats"
