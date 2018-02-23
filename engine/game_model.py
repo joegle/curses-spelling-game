@@ -16,9 +16,12 @@ class GameModel():
         self.wordlist_file = "/word-list.txt"
         self.score_file = "/score.txt"
 
+        self.average_speed = None
+        self.average_accuracy = None
         self.wordlist = []
         self.schedules = {}
         self.setup_config_folder()
+        
 
     def __str__(self):
         return "game model"
@@ -78,8 +81,6 @@ class GameModel():
 
         score_file_name = self.config_folder + self.score_file
         
-        print "score2", score_file_name
-
         f = open(score_file_name, "r")
 
         self.usage = {}
@@ -94,6 +95,14 @@ class GameModel():
             speed = attempts * b / duration
             accuracy = attempts**(-1.0/b)
             point = (date, attempts, duration, speed, accuracy)
+            pd = {}
+            
+            pd["date"] = date
+            pd["attempts"] = attempts
+            pd["duration"] = duration
+            pd["speed"] = speed
+            pd["accuracy"] = accuracy
+            
             #print word, point
 
             d = datetime.datetime.fromtimestamp(date).date()
@@ -111,6 +120,17 @@ class GameModel():
 
         f.close()
 
+    def average_accuracy(self, word):
+        a_sum = 0
+        s_sum = 0
+        if word in self.schedules:
+            for points in self.schedules[word]:
+                print point
+
+    def generate_schedule(self):
+        for word in self.schedules.keys():
+            self.average_accuracy(word)
+            
         
     def record_score(self, score):
         """write the score to disk"""
@@ -133,34 +153,41 @@ class GameModel():
         word_list.close()
         return None
 
-    def stats(self):
+    def compute_stats(self):
         self.load_scores2()
-        k = self.schedules.keys()
-        print self.schedules[k[1]]
-
+        words = self.schedules.keys()
+        
         counter = 0
         sum_speed = 0
         sum_accuracy = 0
-        for x in k:
+        for x in words:
 
             for point in self.schedules[x]:
-                print point
                 sum_speed += point[3]
                 sum_accuracy += point[4]
                 counter += 1
 
-        print "avg speed", sum_speed/ counter
-        print "avg accuracy", sum_accuracy/ counter
+        self.average_accuracy = sum_accuracy/ counter
+        self.average_speed = sum_speed / counter
+        
+    
+    def stats(self):
+        self.compute_stats()
 
-        for x in self.usage.keys():
-            print "\n>>>>",x
+        print "# Number of seconds per day" 
+
+        for x in sorted(self.usage.keys()):
             dots = sorted(self.usage[x])
             r = util.spans(dots)
             sum1 = util.sum_pair(r)
             sum2 = util.spans2(dots)
-            print ">",sum1, sum2
+
+            print x, sum1, sum2
             
             if sum1 != sum2:
                 print dots
+                
+        print "# avg speed", self.average_speed
+        print "# avg accuracy", self.average_accuracy
             
-        print "stats"
+

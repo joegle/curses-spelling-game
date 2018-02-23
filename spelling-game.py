@@ -27,7 +27,7 @@ class game():
         self.logo_panel()
         self.args = parsed_args
 
-        self.model.load_scores()
+        self.model.load_scores2()
         self.model.load_words()
         self.process_args()
         self.show_menu()

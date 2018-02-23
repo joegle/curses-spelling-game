@@ -9,6 +9,12 @@ A simple CLI game to teach spelling
 
 * Todo
   + [ ] Add basic scheduler
+    + Do three rounds of shuffled complete sets
+  + [ ] Advanced scheduler
+    + [ ] Select words for the day
+    + [ ] items.sort(key = lambda item: random.random() * item.weight)
+    + [ ] Compute local accuracy satisfaction threshhold
+    + [ ] Add continuous local reschedule
   + [ ] Hide target word when typing starts
   + [ ] Start timer on first letter typed
   + [ ] Move curses window logic into class and clarify variable names
