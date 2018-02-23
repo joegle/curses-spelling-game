@@ -104,6 +104,10 @@ class game():
                 self.model.stats()
                 sys.exit(0)
 
+            if command[0] == "test":
+                self.model.generate_schedule()
+                sys.exit(0)
+
             sys.exit(1)
         
     def start(self):
