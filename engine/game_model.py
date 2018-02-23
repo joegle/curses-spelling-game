@@ -178,15 +178,10 @@ class GameModel():
 
         for x in sorted(self.usage.keys()):
             dots = sorted(self.usage[x])
-            r = util.spans(dots)
-            sum1 = util.sum_pair(r)
             sum2 = util.spans2(dots)
 
-            print x, sum1, sum2
+            print x, sum2
             
-            if sum1 != sum2:
-                print dots
-                
         print "# avg speed", self.average_speed
         print "# avg accuracy", self.average_accuracy
             
