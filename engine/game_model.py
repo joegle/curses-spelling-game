@@ -114,9 +114,9 @@ class GameModel():
                 
             
             if word in self.schedules:
-                self.schedules[word].append(point)
+                self.schedules[word].append(pd)
             else:
-                self.schedules[word] = [point]
+                self.schedules[word] = [pd]
 
         f.close()
 
@@ -163,8 +163,8 @@ class GameModel():
         for x in words:
 
             for point in self.schedules[x]:
-                sum_speed += point[3]
-                sum_accuracy += point[4]
+                sum_speed += point["speed"]
+                sum_accuracy += point["accuracy"]
                 counter += 1
 
         self.average_accuracy = sum_accuracy/ counter
@@ -174,13 +174,12 @@ class GameModel():
     def stats(self):
         self.compute_stats()
 
-        print "# Number of seconds per day" 
-
+        print "date, seconds, count"
         for x in sorted(self.usage.keys()):
             dots = sorted(self.usage[x])
             sum2 = util.spans2(dots)
-
-            print x, sum2
+            print "%s, %s, %s"%(x, sum2, len(self.schedules.keys()))
+            
             
         print "# avg speed", self.average_speed
         print "# avg accuracy", self.average_accuracy
