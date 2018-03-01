@@ -6,6 +6,8 @@ import logging
 import time
 import datetime
 import util
+import numpy as np
+import pandas as pd
 
 class GameModel():
     """handles game session data and is an extention of the filesystem"""
@@ -107,12 +109,21 @@ class GameModel():
         f.close()
 
     def profile(self, word):
-        a_sum = 0
-        s_sum = 0
         if word in self.schedules:
-            for point in self.schedules[word]:
-                print point
+            points = self.schedules[word]
+        else:
+            return
+        df = pd.DataFrame(points)
+        print df
+        average_speed =  df["speed"].mean()
+        average_accuracy =  df["accuracy"].mean() 
 
+        print "speed std", df["speed"].std()
+        print "accuracy std", df["accuracy"].std()
+
+        print average_speed 
+        print average_accuracy 
+            
     def generate_schedule(self):
         for word in self.schedules.keys():
             print word
