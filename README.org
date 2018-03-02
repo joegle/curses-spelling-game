@@ -8,7 +8,7 @@ A simple CLI game to teach spelling
   + Maybe have fun learning ncurses
 
 * Todo
-  + [ ] Add basic scheduler
+  + [X] Add basic scheduler
     + Do three rounds of shuffled complete sets
   + [ ] Advanced scheduler
     + [ ] Select words for the day

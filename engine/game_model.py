@@ -8,6 +8,7 @@ import datetime
 import util
 import numpy as np
 import pandas as pd
+import random
 
 class GameModel():
     """handles game session data and is an extention of the filesystem"""
@@ -62,8 +63,9 @@ class GameModel():
 
         r1 = map(str.rstrip, f.readlines())
         r2 = map(lambda x:x.lower(), r1)
-        logging.info("wordlist: " + str(r2))
-        self.wordlist = r2
+        r3 = filter(None, r2)
+        logging.info("wordlist: " + str(r3))
+        self.wordlist = r3
 
     def load_scores2(self):
 
@@ -123,12 +125,13 @@ class GameModel():
 
         print average_speed 
         print average_accuracy 
-            
+
     def generate_schedule(self):
-        for word in self.schedules.keys():
-            print word
-            self.profile(word)
-            
+        words = []
+        for x in range(3):
+            random.shuffle(self.wordlist)
+            words.extend(self.wordlist)
+        return words
         
     def record_score(self, score):
         """write the score to disk"""

@@ -118,7 +118,10 @@ class game():
         """Main game loop"""
         logging.info("Starting game")
         logging.info(self.model.wordlist)
-        for word in self.model.wordlist:
+        wl = self.model.generate_schedule()
+        logging.debug(wl)
+
+        for word in wl:
             score = self.challenge_word(word)
             self.model.record_score(score)
         
