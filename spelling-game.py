@@ -125,6 +125,8 @@ class game():
             score = self.challenge_word(word)
             self.model.record_score(score)
         
+        self.model.stats()
+        
     def challenge_word(self, word):
         """runs a typing challenge loop 
             and returns (word, attempts, seconds_elapsed)
